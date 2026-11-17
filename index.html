@@ -93,6 +93,12 @@ p{margin:0}
 .dots button{all:unset;cursor:pointer;width:6px;height:6px;border-radius:50%;background:var(--line);transition:background .3s,width .3s}
 .dots button.on{background:var(--accent);width:18px;border-radius:3px}
 .dots button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* ---------- 공유 ---------- */
+.share{padding-block:8px 56px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.share button{font-family:var(--f-body);font-size:14px;padding:13px 0;border-radius:6px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.share .kakao{background:#FEE500;border-color:#FEE500;color:#191919;font-weight:500}
+.share button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
 @media (prefers-reduced-motion:reduce){.slider img{transition:none}.slider img.on{animation:none}}
 .lightbox[hidden]{display:none}
 .lightbox{position:fixed;inset:0;z-index:50;background:rgba(15,15,14,.94);display:flex;align-items:center;justify-content:center;
@@ -242,6 +248,11 @@ footer .script{font-family:var(--f-script);font-size:30px;color:var(--ink);line-
     </div>
   </section>
 
+  <div class="share wrap">
+    <button class="kakao" type="button" id="share-kakao">카카오톡으로 공유하기</button>
+    <button type="button" id="share-link">링크 복사</button>
+  </div>
+
   <footer class="wrap">
     <div class="script">Thank you</div>
     전용국 &amp; 서재희 · 2027. 02. 28
@@ -354,5 +365,30 @@ footer .script{font-family:var(--f-script);font-size:30px;color:var(--ink);line-
 })();
 </script>
 
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+  var URL_='https://jeonyongguk.github.io/wedding/';
+  try{ if(window.Kakao && !Kakao.isInitialized()) Kakao.init('726cc139f0f7b68b288181298eb6165e'); }catch(e){}
+  document.getElementById('share-kakao').addEventListener('click',function(){
+    if(!(window.Kakao && Kakao.isInitialized())){ alertish('카카오톡 공유를 불러오지 못했어요. 링크 복사를 이용해 주세요.'); return; }
+    Kakao.Share.sendDefault({
+      objectType:'feed',
+      content:{
+        title:'전용국 ♥ 서재희 결혼합니다',
+        description:'2027년 2월 28일 일요일 오후 4시 20분\nMJ컨벤션 5층 그랜드볼룸',
+        imageUrl:URL_+'og.jpg',
+        link:{mobileWebUrl:URL_,webUrl:URL_}
+      },
+      buttons:[{title:'청첩장 열기',link:{mobileWebUrl:URL_,webUrl:URL_}}]
+    });
+  });
+  document.getElementById('share-link').addEventListener('click',function(){
+    if(navigator.clipboard){ navigator.clipboard.writeText(URL_).then(function(){alertish('링크를 복사했어요');},function(){alertish(URL_);}); }
+    else alertish(URL_);
+  });
+  function alertish(m){ if(typeof say==='function') say(m); else { var t=document.querySelector('.toast'); if(t){t.textContent=m;t.hidden=false;setTimeout(function(){t.hidden=true},1800);} } }
+})();
+</script>
 </body>
 </html>
