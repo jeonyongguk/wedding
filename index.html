@@ -80,10 +80,11 @@ p{margin:0}
 .dday strong{color:var(--accent);font-weight:500}
 
 /* ---------- 갤러리 ---------- */
-.gallery-grid{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-.gallery-grid button{all:unset;cursor:pointer;aspect-ratio:1;display:block;background:var(--soft) center/cover no-repeat}
+.gallery-grid{margin-top:30px;display:flex;gap:6px;align-items:flex-start}
+.gallery-grid .gcol{flex:1;min-width:0}
+.gallery-grid button{all:unset;cursor:pointer;display:block;width:100%;margin:0 0 6px;border-radius:3px;overflow:hidden;background:var(--soft)}
+.gallery-grid img{display:block;width:100%;height:auto}
 .gallery-grid button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.gallery-grid .wide{grid-column:span 2;aspect-ratio:2/1}
 .hint{margin-top:14px;font-size:12px;color:var(--sub)}
 .slider{position:relative;margin-top:30px;aspect-ratio:4/5;max-width:100%;overflow:hidden;border-radius:4px;background:var(--soft);cursor:pointer}
 .slider img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease;transform:scale(1.04)}
@@ -103,7 +104,12 @@ p{margin:0}
 .lightbox[hidden]{display:none}
 .lightbox{position:fixed;inset:0;z-index:50;background:rgba(15,15,14,.94);display:flex;align-items:center;justify-content:center;
   padding:calc(56px + env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) calc(56px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+.lightbox{padding:0!important}
+.lb-track{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.lb-track::-webkit-scrollbar{display:none}
+.lb-track figure{flex:0 0 100%;width:100%;height:100%;margin:0;scroll-snap-align:center;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;padding:calc(56px + env(safe-area-inset-top,0px)) 10px calc(56px + env(safe-area-inset-bottom,0px))}
 .lightbox img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.lb-btn{z-index:2}
 .lb-btn{position:absolute;background:none;border:0;color:#fff;font-size:15px;font-family:var(--f-label);padding:12px 14px;cursor:pointer;opacity:.85}
 .lb-btn:focus-visible{outline:2px solid #fff}
 .lb-close{top:calc(6px + env(safe-area-inset-top,0px));right:max(6px,env(safe-area-inset-right,0px))}
@@ -204,7 +210,7 @@ footer .script{font-family:var(--f-script);font-size:30px;color:var(--ink);line-
     <div class="slider" id="slider" role="region" aria-label="사진 슬라이드쇼"></div>
     <div class="dots" id="dots"></div>
     <div class="gallery-grid" id="grid"></div>
-    <p class="hint">사진을 누르면 크게 볼 수 있어요. 옆으로 밀어서 넘길 수도 있어요.</p>
+    <p class="hint">사진을 누르면 크게 볼 수 있어요. 크게 볼 때 옆으로 밀어서 넘길 수 있어요.</p>
   </section>
 
   <!-- 장소 -->
@@ -260,7 +266,7 @@ footer .script{font-family:var(--f-script);font-size:30px;color:var(--ink);line-
 </div>
 
 <div class="lightbox" id="lb" hidden role="dialog" aria-modal="true" aria-label="사진 크게 보기">
-  <img id="lb-img" alt="">
+  <div class="lb-track" id="lb-track"></div>
   <button class="lb-btn lb-close" id="lb-close" type="button">닫기 ✕</button>
   <button class="lb-btn lb-prev" id="lb-prev" type="button" aria-label="이전 사진">‹</button>
   <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="다음 사진">›</button>
@@ -293,36 +299,37 @@ footer .script{font-family:var(--f-script);font-size:30px;color:var(--ink);line-
   }
   tick(); setInterval(tick,1000);
 
-  // 갤러리
-  var N=8, grid=document.getElementById('grid'), cur=0;
-  var order=[6,1,2,3,4,5,7,8];
-  for(var j=0;j<N;j++){
-    var i=order[j];
-    var b=document.createElement('button'); b.type='button';
-    if(j===0){b.className='wide';b.style.backgroundImage='url("g'+i+'.jpg")';b.style.backgroundPosition='center 45%';}
-    else b.style.backgroundImage='url("t'+i+'.jpg")';
-    b.setAttribute('aria-label','사진 '+i+' 크게 보기');
-    (function(k){b.addEventListener('click',function(){open(k);});})(j);
-    grid.appendChild(b);
-  }
-  var lb=document.getElementById('lb'), img=document.getElementById('lb-img'), cnt=document.getElementById('lb-count');
-  function show(){img.src='g'+order[cur]+'.jpg';img.alt='사진 '+(cur+1);cnt.textContent=(cur+1)+' / '+N;}
-  function open(k){cur=k;show();lb.hidden=false;document.getElementById('lb-close').focus();}
-  function close(){lb.hidden=true;}
-  function step(n){cur=(cur+n+N)%N;show();}
+  // 갤러리 (사진 비율 그대로 2열)
+  var order=[6,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21], N=order.length, grid=document.getElementById('grid'), cur=0;
+  var DIM={1:[600,892],2:[600,899],3:[600,900],4:[600,800],5:[600,900],6:[600,890],7:[600,892],8:[600,801],9:[360,540],10:[360,480],11:[600,400],12:[600,400],13:[508,339],14:[508,339],15:[508,339],16:[534,360],17:[534,360],18:[534,360],19:[534,360],20:[600,892],21:[508,339]};
+  var POS={11:'28% 50%',12:'45% 50%',13:'72% 50%',15:'38% 50%',16:'32% 50%',17:'36% 50%',18:'42% 50%',21:'40% 50%'};
+  var cols=[document.createElement('div'),document.createElement('div')], hh=[0,0]; cols.forEach(function(c){c.className='gcol';grid.appendChild(c);});
+  order.forEach(function(i,j){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','사진 '+(j+1)+' 크게 보기');
+    var im=document.createElement('img'); im.src='m'+i+'.jpg'; im.alt=''; im.width=DIM[i][0]; im.height=DIM[i][1]; im.loading=j<6?'eager':'lazy'; im.decoding='async';
+    b.appendChild(im); b.addEventListener('click',function(){open(j);}); var c=hh[0]<=hh[1]?0:1; cols[c].appendChild(b); hh[c]+=DIM[i][1]/DIM[i][0]+0.02;
+  });
+  // 크게 보기: 손가락으로 옆으로 밀어서 넘기기
+  var lb=document.getElementById('lb'), track=document.getElementById('lb-track'), cnt=document.getElementById('lb-count');
+  order.forEach(function(i,k){var f=document.createElement('figure');var im=document.createElement('img');im.alt='사진 '+(k+1);im.setAttribute('data-src','g'+i+'.jpg');im.decoding='async';f.appendChild(im);track.appendChild(f);});
+  function load(k){[k-1,k,k+1].forEach(function(x){x=(x+N)%N;var im=track.children[x].firstChild;if(!im.getAttribute('src'))im.src=im.getAttribute('data-src');});}
+  function mark(k){cur=k;cnt.textContent=(k+1)+' / '+N;load(k);}
+  var st; track.addEventListener('scroll',function(){clearTimeout(st);st=setTimeout(function(){var w=track.clientWidth||1;mark(Math.max(0,Math.min(N-1,Math.round(track.scrollLeft/w))));},80);},{passive:true});
+  function to(k,smooth){var w=track.clientWidth;if(track.scrollTo)track.scrollTo({left:k*w,behavior:smooth?'smooth':'auto'});else track.scrollLeft=k*w;mark(k);}
+  function open(k){lb.hidden=false;document.documentElement.style.overflow='hidden';to(k,false);document.getElementById('lb-close').focus({preventScroll:true});}
+  function close(){lb.hidden=true;document.documentElement.style.overflow='';}
+  function step(n){var k=cur+n;if(k<0)k=N-1;if(k>N-1)k=0;to(k,Math.abs(n)===1&&k!==0&&k!==N-1);}
   document.getElementById('lb-close').onclick=close;
   document.getElementById('lb-prev').onclick=function(){step(-1);};
   document.getElementById('lb-next').onclick=function(){step(1);};
-  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  track.addEventListener('click',function(e){if(e.target.tagName==='FIGURE')close();});
   document.addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')step(-1);if(e.key==='ArrowRight')step(1);});
-  var sx=null;
-  lb.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
-  lb.addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)step(dx<0?1:-1);sx=null;});
+  window.addEventListener('resize',function(){if(!lb.hidden)to(cur,false);});
 
   // 자동 슬라이드쇼 (4초마다, 스와이프·점 누르기 가능, 누르면 크게 보기)
   var sl=document.getElementById('slider'), dots=document.getElementById('dots'), si=0, timer, imgs=[], dbs=[];
   order.forEach(function(n,k){
-    var im=document.createElement('img'); im.src='g'+n+'.jpg'; im.alt='사진 '+(k+1); im.loading=k<2?'eager':'lazy'; if(k===0)im.className='on';
+    var im=document.createElement('img'); im.src='g'+n+'.jpg'; if(POS[n])im.style.objectPosition=POS[n]; im.alt='사진 '+(k+1); im.loading=k<2?'eager':'lazy'; if(k===0)im.className='on';
     sl.appendChild(im); imgs.push(im);
     var d=document.createElement('button'); d.type='button'; d.setAttribute('aria-label',(k+1)+'번째 사진'); if(k===0)d.className='on';
     d.addEventListener('click',function(){go(k);restart();}); dots.appendChild(d); dbs.push(d);
