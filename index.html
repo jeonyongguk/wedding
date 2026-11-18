@@ -12,7 +12,7 @@
 <style>*,*::before,*::after{box-sizing:border-box}html,body{margin:0}body{font-size:14px}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <title>전용국♥서재희 결혼식에 초대합니다</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Allura&family=Inter:wght@400;500&display=swap">
 <style>
 /* Layout: 단일 세로 흐름(최대 480px), 사진 표지 → 초대 → 일정 → 갤러리 → 장소 → 마음 전하실 곳.
    청첩장 한 장으로 완결된 단일 라이트 테마. 포인트 색은 종이 청첩장과 같은 코스모스 주황. */
@@ -24,7 +24,7 @@
   --soft:#f6f4f1;
   --accent:#e2591b;
   --f-body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
-  --f-script:"Inter","Noto Sans KR",system-ui,sans-serif;
+  --f-script:"Allura","Snell Roundhand",cursive;
   --f-label:"Inter","Noto Sans KR",system-ui,sans-serif;
   color-scheme:light;
 }
@@ -42,9 +42,9 @@ p{margin:0}
 /* ---------- 표지 ---------- */
 .cover{position:relative;aspect-ratio:3/4.4;max-width:100%;background:#dedbd6 url("cover.jpg") center 30%/cover no-repeat;color:#fff;overflow:hidden}
 .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.18),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 58%,rgba(0,0,0,.42))}
-.cover-title{position:absolute;left:0;right:0;top:7%;z-index:2;font-family:var(--f-script);font-weight:300;font-size:clamp(15px,4.4vw,19px);line-height:1.9;letter-spacing:.42em;text-transform:uppercase;text-align:center;padding-left:.42em;text-shadow:0 1px 10px rgba(0,0,0,.16)}
+.cover-title{position:absolute;left:0;right:0;top:5%;z-index:2;font-family:var(--f-script);font-size:clamp(52px,15vw,74px);line-height:.92;text-align:left;padding-left:max(26px,env(safe-area-inset-left,0px));text-shadow:0 1px 12px rgba(0,0,0,.18)}
 .cover-title span{display:block}
-.cover-title span:nth-child(2){font-weight:400}
+.cover-title span:nth-child(2){padding-left:1.1em}
 .cover-info{position:absolute;left:0;right:0;bottom:7%;z-index:2;text-align:center}
 .cover-names{font-size:19px;font-weight:400;letter-spacing:.32em}
 .cover-names i{font-style:normal;font-family:var(--f-label);font-size:14px;margin:0 .5em;opacity:.9}
@@ -52,7 +52,7 @@ p{margin:0}
 .cover-place{font-size:13px;opacity:.92}
 
 /* ---------- 초대 ---------- */
-.invite .script{font-family:var(--f-script);font-weight:300;font-size:17px;letter-spacing:.32em;text-transform:uppercase;line-height:1.4;color:var(--ink)}
+.invite .script{font-family:var(--f-script);font-size:40px;line-height:1;color:var(--ink)}
 .invite .msg{margin-top:28px;font-size:15px;line-height:2.05}
 .parents{margin:40px auto 0;display:grid;grid-template-columns:auto auto auto;justify-content:center;column-gap:10px;row-gap:10px;font-size:15px;align-items:baseline}
 .parents .rel{color:var(--sub);font-size:13px}
@@ -142,7 +142,7 @@ summary:focus-visible{outline:2px solid var(--accent)}
 .placeholder{color:#b9b4ad}
 
 footer{padding-block:48px 64px;text-align:center;font-size:12px;color:var(--sub);background:var(--soft)}
-footer .script{font-family:var(--f-script);font-weight:300;font-size:14px;letter-spacing:.36em;text-transform:uppercase;color:var(--ink);line-height:1.4;margin-bottom:10px}
+footer .script{font-family:var(--f-script);font-size:30px;color:var(--ink);line-height:1;margin-bottom:8px}
 
 .toast[hidden]{display:none}
 .toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:9px 16px;border-radius:999px;z-index:60}
